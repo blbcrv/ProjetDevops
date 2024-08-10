@@ -1,3 +1,4 @@
+#Projet DevOps Maxime Etcheverria Clément Pagès
 # Comment ça fonctionne ?
 La première partie concerne Terraform. Ici, il s'occupera de créer une instance AWS EC2 qui permettra d'accueillir notre serveur web.
 Une fois cette instance créée, il l'image Docker contenant le serveur web est déposée sur l'instance grâce a un playbook Ansible.
