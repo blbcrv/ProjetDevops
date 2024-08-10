@@ -1,4 +1,7 @@
-# Welcome to the Web Server
+# Lancer le projet
 
-This is a simple web server to display this README file.
+terraform init
+terraform apply
 
+
+ansible-playbook  -i hosts deploy.yml
