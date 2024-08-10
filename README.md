@@ -16,3 +16,8 @@ terraform apply
 ansible-playbook  -i hosts securitygroups.yml
 ansible-playbook  -i hosts deploy.yml
 ```
+# Déroulement du playbook Ansible
+Comme dit précédemment nous n'avons pas réussi à construire notre image Docker sur l'instance EC2. 
+
+
+<img width="1361" alt="image" src="https://github.com/user-attachments/assets/78117104-6ea7-4d7a-96b1-a0cbe953ec93">
