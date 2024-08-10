@@ -1,0 +1,37 @@
+- name: Créer un groupe de sécurité et l'associer à une instance EC2
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Créer un groupe de sécurité pour le port 22 et 80
+      community.aws.ec2_group:
+        name: web_server_sg
+        description: "Groupe de sécurité pour le serveur web"
+        vpc_id: "i-0829403bad8215e18" 
+        region: "eu-west-1"
+        rules:
+          - proto: tcp
+            from_port: 22
+            to_port: 22
+            cidr_ip: 0.0.0.0/0
+          - proto: tcp
+            from_port: 80
+            to_port: 80
+            cidr_ip: 0.0.0.0/0
+        rules_egress:
+          - proto: all
+            cidr_ip: 0.0.0.0/0
+        state: present
+      register: security_group
+
+    - name: Associer le groupe de sécurité à l'instance EC2
+      community.aws.ec2:
+        instance_ids: "i-0829403bad8215e18" 
+        region: "eu-west-1"
+        instance_type: t2.micro
+        image: ami-0c38b837cd80f13bb
+        key_name: "keyPairIPIDevOps"
+        vpc_subnet_id: "subnet-00c256bfebd308760 " 
+        group_id: "{{ security_group.group_id }}"
+        wait: yes
+        assign_public_ip: yes
+      register: ec2
