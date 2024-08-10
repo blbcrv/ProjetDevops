@@ -8,5 +8,7 @@ En théorie, le build et le déploiement aurait dû être fait par Ansible. Cepe
 ```
 terraform init
 terraform apply
+
+ansible-playbook  -i hosts securityGroups.yml
 ansible-playbook  -i hosts deploy.yml
 ```
