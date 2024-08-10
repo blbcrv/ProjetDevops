@@ -1,0 +1,64 @@
+- name: Déployer l'application web avec Docker
+  hosts: web
+  become: yes
+  tasks:
+
+    - name: Installer les dépendances pour Docker
+      ansible.builtin.apt:
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - software-properties-common
+        state: present
+
+    - name: Ajouter la clé GPG officielle de Docker
+      ansible.builtin.apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: Ajouter le dépôt APT de Docker
+      ansible.builtin.apt_repository:
+        repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable
+        state: present
+
+    - name: Installer Docker
+      ansible.builtin.apt:
+        name: docker-ce
+        state: present
+
+    - name: S'assurer que le service Docker est en cours d'exécution
+      ansible.builtin.service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Ajouter l'utilisateur ubuntu au groupe docker (permet de ne pas utiliser sudo pour les commandes Docker)
+      ansible.builtin.user:
+        name: ubuntu
+        groups: docker
+        append: yes
+
+    - name: Copier l'application web sur le serveur
+      ansible.builtin.copy:
+        src: ./webapp/
+        dest: /home/ubuntu/webapp/
+        owner: ubuntu
+        group: ubuntu
+        mode: '0755'
+
+    - name: Construire l'image Docker
+      community.docker.docker_image:
+        path: /home/ubuntu/webapp/
+        name: webapp
+        tag: latest
+        state: present
+
+    - name: Lancer le conteneur Docker
+      community.docker.docker_container:
+        name: webapp
+        image: webapp:latest
+        state: started
+        ports:
+          - "80:3000"
+

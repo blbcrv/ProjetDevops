@@ -1,0 +1,6 @@
+- hosts: web
+  remote_user: ubuntu
+  tasks:
+    - name: Vérification de la connexion SSH
+      ping:
+
